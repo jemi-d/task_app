@@ -1,31 +1,30 @@
 name: Windows Build
 
-on: [push, pull_request]  # Runs when code is pushed or a PR is created
+on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: windows-latest  # Uses a Windows runner
-
+    runs-on: windows-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3  # Fetch your repo code
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.30.0-0.1.pre"  # Use stable Flutter version
+          flutter-version: "3.30.0-1.0.pre.583"
+          channel: master
 
-      - name: Enable Windows Desktop Support
-        run: flutter config --enable-windows-desktop
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: "3.8.0-149.0.dev"
+
+      - name: Upgrade Flutter
+        run: flutter upgrade
 
       - name: Install Dependencies
         run: flutter pub get
 
       - name: Build Windows App
         run: flutter build windows
-
-      - name: Upload Windows Build Artifact
-        uses: actions/upload-artifact@v4.3.1
-        with:
-          name: windows-build
-          path: build/windows/runner/Release/
