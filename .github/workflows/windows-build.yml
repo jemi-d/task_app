@@ -34,8 +34,5 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          fetch-depth: 1
-          clean: true
-          submodules: true
           name: Windows Build
-          path: build/windows/x64/runner/Release/
+          path: build/windows/runner/Release/
