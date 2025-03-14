@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tf1/ui/DashboardPage.dart';
-import 'package:tf1/viewModel/TaskViewModel.dart';
+import 'package:tf1/ui/dashboard_page.dart';
+import 'package:tf1/viewModel/task_view_model.dart';
 
 void main() {
   if (kIsWeb) {

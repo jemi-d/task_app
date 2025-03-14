@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tf1/ui/TaskCommencement.dart';
-import 'AddTaskPage.dart';
-import 'AuthPage.dart';
-import '../datamodel/Task.dart';
+import 'package:tf1/ui/task_commencement.dart';
+import '../local/database.dart';
+import 'add_task_page.dart';
+import 'auth_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -13,12 +13,27 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   bool isSidebarOpen = true;
-  List<Task> taskList = [
-    Task(urn: 'URN', taskName: 'Task 1', assignedBy: 'User A', assignedTo: 'UserB', commencementDate: '01-01-2025', dueDate: '01-01-2025', clientName: 'Client X', status: 'Pending', taskType: 0),
-    Task(urn: 'URN1', taskName: 'Task 1', assignedBy: 'User A', assignedTo: 'UserB', commencementDate: '01-01-2025', dueDate: '01-01-2025', clientName: 'Client X', status: 'Pending', taskType: 1),
-  ];
+  final AppDatabase _database = AppDatabase.instance;
+  List<TaskDB> taskList = [];
+  // List<TaskDB> taskList = [
+  //   Task(urn: 'URN', taskName: 'Task 1', assignedBy: 'User A', assignedTo: 'UserB', commencementDate: '01-01-2025', dueDate: '01-01-2025', clientName: 'Client X', status: 'Pending', taskType: 0),
+  //   Task(urn: 'URN1', taskName: 'Task 1', assignedBy: 'User A', assignedTo: 'UserB', commencementDate: '01-01-2025', dueDate: '01-01-2025', clientName: 'Client X', status: 'Pending', taskType: 1),
+  // ];
 
   bool isHome = true;
+
+  @override
+  void initState() {
+    _loadTasks();
+    super.initState();
+  }
+
+  Future<void> _loadTasks() async {
+    List<TaskDB> tasks = await _database.getAllTasks();
+    setState(() {
+      taskList = tasks;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +133,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         Row(children: [
                           Spacer(),
-                          Container(height: 40,width: 180,
+                          SizedBox(height: 40,width: 180,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade900,shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),side: BorderSide(color: Colors.green.shade900)),),
@@ -133,7 +148,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         const SizedBox(height: 10),
                         // Table-like UI
                         Expanded(flex: 9,
-                          child: ListView.builder(
+                          child:  ListView.builder(
                             itemCount: taskList.length + 1,
                             itemBuilder: (context, index) {
                               if (index == 0) {
@@ -156,20 +171,20 @@ class _DashboardPageState extends State<DashboardPage> {
                                   ),
                                 );
                               }
-                              Task task = taskList[index - 1];
+                              TaskDB task = taskList[index - 1];
                               return Container(
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border(
-                                    bottom: BorderSide(color: Colors.black.withOpacity(0.3)),
+                                    bottom: BorderSide(color: Colors.black),
                                   ),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(flex: 1,child: Text(task.urn,)),
-                                    Expanded(flex: 2,child: Text(task.taskName,textAlign: TextAlign.center,),),
+                                    Expanded(flex: 2,child: Text(task.name,textAlign: TextAlign.center,),),
                                     Expanded(flex: 2,child: Text(task.assignedBy,textAlign: TextAlign.center,)),
                                     Expanded(flex: 2,child: Text(task.assignedTo,textAlign: TextAlign.center,)),
                                     Expanded(flex: 2,child: Text(task.commencementDate,textAlign: TextAlign.center,)),

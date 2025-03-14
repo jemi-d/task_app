@@ -60,23 +60,23 @@ class $TasksTable extends Tasks with drift.TableInfo<$TasksTable, TaskDB> {
   static const drift.VerificationMeta _commencementDateMeta =
       const drift.VerificationMeta('commencementDate');
   @override
-  late final drift.GeneratedColumn<DateTime> commencementDate =
-      drift.GeneratedColumn<DateTime>(
+  late final drift.GeneratedColumn<String> commencementDate =
+      drift.GeneratedColumn<String>(
         'commencement_date',
         aliasedName,
         false,
-        type: DriftSqlType.dateTime,
+        type: DriftSqlType.string,
         requiredDuringInsert: true,
       );
   static const drift.VerificationMeta _dueDateMeta =
       const drift.VerificationMeta('dueDate');
   @override
-  late final drift.GeneratedColumn<DateTime> dueDate =
-      drift.GeneratedColumn<DateTime>(
+  late final drift.GeneratedColumn<String> dueDate =
+      drift.GeneratedColumn<String>(
         'due_date',
         aliasedName,
         false,
-        type: DriftSqlType.dateTime,
+        type: DriftSqlType.string,
         requiredDuringInsert: true,
       );
   static const drift.VerificationMeta _assignedToMeta =
@@ -257,12 +257,12 @@ class $TasksTable extends Tasks with drift.TableInfo<$TasksTable, TaskDB> {
           )!,
       commencementDate:
           attachedDatabase.typeMapping.read(
-            DriftSqlType.dateTime,
+            DriftSqlType.string,
             data['${effectivePrefix}commencement_date'],
           )!,
       dueDate:
           attachedDatabase.typeMapping.read(
-            DriftSqlType.dateTime,
+            DriftSqlType.string,
             data['${effectivePrefix}due_date'],
           )!,
       assignedTo:
@@ -299,8 +299,8 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
   final String name;
   final String urn;
   final String description;
-  final DateTime commencementDate;
-  final DateTime dueDate;
+  final String commencementDate;
+  final String dueDate;
   final String assignedTo;
   final String assignedBy;
   final String clientName;
@@ -324,8 +324,8 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
     map['name'] = drift.Variable<String>(name);
     map['urn'] = drift.Variable<String>(urn);
     map['description'] = drift.Variable<String>(description);
-    map['commencement_date'] = drift.Variable<DateTime>(commencementDate);
-    map['due_date'] = drift.Variable<DateTime>(dueDate);
+    map['commencement_date'] = drift.Variable<String>(commencementDate);
+    map['due_date'] = drift.Variable<String>(dueDate);
     map['assigned_to'] = drift.Variable<String>(assignedTo);
     map['assigned_by'] = drift.Variable<String>(assignedBy);
     map['client_name'] = drift.Variable<String>(clientName);
@@ -358,8 +358,8 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
       name: serializer.fromJson<String>(json['name']),
       urn: serializer.fromJson<String>(json['urn']),
       description: serializer.fromJson<String>(json['description']),
-      commencementDate: serializer.fromJson<DateTime>(json['commencementDate']),
-      dueDate: serializer.fromJson<DateTime>(json['dueDate']),
+      commencementDate: serializer.fromJson<String>(json['commencementDate']),
+      dueDate: serializer.fromJson<String>(json['dueDate']),
       assignedTo: serializer.fromJson<String>(json['assignedTo']),
       assignedBy: serializer.fromJson<String>(json['assignedBy']),
       clientName: serializer.fromJson<String>(json['clientName']),
@@ -374,8 +374,8 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
       'name': serializer.toJson<String>(name),
       'urn': serializer.toJson<String>(urn),
       'description': serializer.toJson<String>(description),
-      'commencementDate': serializer.toJson<DateTime>(commencementDate),
-      'dueDate': serializer.toJson<DateTime>(dueDate),
+      'commencementDate': serializer.toJson<String>(commencementDate),
+      'dueDate': serializer.toJson<String>(dueDate),
       'assignedTo': serializer.toJson<String>(assignedTo),
       'assignedBy': serializer.toJson<String>(assignedBy),
       'clientName': serializer.toJson<String>(clientName),
@@ -388,8 +388,8 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
     String? name,
     String? urn,
     String? description,
-    DateTime? commencementDate,
-    DateTime? dueDate,
+    String? commencementDate,
+    String? dueDate,
     String? assignedTo,
     String? assignedBy,
     String? clientName,
@@ -479,8 +479,8 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
   final drift.Value<String> name;
   final drift.Value<String> urn;
   final drift.Value<String> description;
-  final drift.Value<DateTime> commencementDate;
-  final drift.Value<DateTime> dueDate;
+  final drift.Value<String> commencementDate;
+  final drift.Value<String> dueDate;
   final drift.Value<String> assignedTo;
   final drift.Value<String> assignedBy;
   final drift.Value<String> clientName;
@@ -502,8 +502,8 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
     required String name,
     this.urn = const drift.Value.absent(),
     required String description,
-    required DateTime commencementDate,
-    required DateTime dueDate,
+    required String commencementDate,
+    required String dueDate,
     required String assignedTo,
     required String assignedBy,
     required String clientName,
@@ -520,8 +520,8 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
     drift.Expression<String>? name,
     drift.Expression<String>? urn,
     drift.Expression<String>? description,
-    drift.Expression<DateTime>? commencementDate,
-    drift.Expression<DateTime>? dueDate,
+    drift.Expression<String>? commencementDate,
+    drift.Expression<String>? dueDate,
     drift.Expression<String>? assignedTo,
     drift.Expression<String>? assignedBy,
     drift.Expression<String>? clientName,
@@ -546,8 +546,8 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
     drift.Value<String>? name,
     drift.Value<String>? urn,
     drift.Value<String>? description,
-    drift.Value<DateTime>? commencementDate,
-    drift.Value<DateTime>? dueDate,
+    drift.Value<String>? commencementDate,
+    drift.Value<String>? dueDate,
     drift.Value<String>? assignedTo,
     drift.Value<String>? assignedBy,
     drift.Value<String>? clientName,
@@ -583,12 +583,10 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
       map['description'] = drift.Variable<String>(description.value);
     }
     if (commencementDate.present) {
-      map['commencement_date'] = drift.Variable<DateTime>(
-        commencementDate.value,
-      );
+      map['commencement_date'] = drift.Variable<String>(commencementDate.value);
     }
     if (dueDate.present) {
-      map['due_date'] = drift.Variable<DateTime>(dueDate.value);
+      map['due_date'] = drift.Variable<String>(dueDate.value);
     }
     if (assignedTo.present) {
       map['assigned_to'] = drift.Variable<String>(assignedTo.value);
@@ -640,8 +638,8 @@ typedef $$TasksTableCreateCompanionBuilder =
       required String name,
       drift.Value<String> urn,
       required String description,
-      required DateTime commencementDate,
-      required DateTime dueDate,
+      required String commencementDate,
+      required String dueDate,
       required String assignedTo,
       required String assignedBy,
       required String clientName,
@@ -653,8 +651,8 @@ typedef $$TasksTableUpdateCompanionBuilder =
       drift.Value<String> name,
       drift.Value<String> urn,
       drift.Value<String> description,
-      drift.Value<DateTime> commencementDate,
-      drift.Value<DateTime> dueDate,
+      drift.Value<String> commencementDate,
+      drift.Value<String> dueDate,
       drift.Value<String> assignedTo,
       drift.Value<String> assignedBy,
       drift.Value<String> clientName,
@@ -690,12 +688,12 @@ class $$TasksTableFilterComposer
     builder: (column) => drift.ColumnFilters(column),
   );
 
-  drift.ColumnFilters<DateTime> get commencementDate => $composableBuilder(
+  drift.ColumnFilters<String> get commencementDate => $composableBuilder(
     column: $table.commencementDate,
     builder: (column) => drift.ColumnFilters(column),
   );
 
-  drift.ColumnFilters<DateTime> get dueDate => $composableBuilder(
+  drift.ColumnFilters<String> get dueDate => $composableBuilder(
     column: $table.dueDate,
     builder: (column) => drift.ColumnFilters(column),
   );
@@ -750,12 +748,12 @@ class $$TasksTableOrderingComposer
     builder: (column) => drift.ColumnOrderings(column),
   );
 
-  drift.ColumnOrderings<DateTime> get commencementDate => $composableBuilder(
+  drift.ColumnOrderings<String> get commencementDate => $composableBuilder(
     column: $table.commencementDate,
     builder: (column) => drift.ColumnOrderings(column),
   );
 
-  drift.ColumnOrderings<DateTime> get dueDate => $composableBuilder(
+  drift.ColumnOrderings<String> get dueDate => $composableBuilder(
     column: $table.dueDate,
     builder: (column) => drift.ColumnOrderings(column),
   );
@@ -804,12 +802,12 @@ class $$TasksTableAnnotationComposer
     builder: (column) => column,
   );
 
-  drift.GeneratedColumn<DateTime> get commencementDate => $composableBuilder(
+  drift.GeneratedColumn<String> get commencementDate => $composableBuilder(
     column: $table.commencementDate,
     builder: (column) => column,
   );
 
-  drift.GeneratedColumn<DateTime> get dueDate =>
+  drift.GeneratedColumn<String> get dueDate =>
       $composableBuilder(column: $table.dueDate, builder: (column) => column);
 
   drift.GeneratedColumn<String> get assignedTo => $composableBuilder(
@@ -863,9 +861,9 @@ class $$TasksTableTableManager
                 drift.Value<String> name = const drift.Value.absent(),
                 drift.Value<String> urn = const drift.Value.absent(),
                 drift.Value<String> description = const drift.Value.absent(),
-                drift.Value<DateTime> commencementDate =
+                drift.Value<String> commencementDate =
                     const drift.Value.absent(),
-                drift.Value<DateTime> dueDate = const drift.Value.absent(),
+                drift.Value<String> dueDate = const drift.Value.absent(),
                 drift.Value<String> assignedTo = const drift.Value.absent(),
                 drift.Value<String> assignedBy = const drift.Value.absent(),
                 drift.Value<String> clientName = const drift.Value.absent(),
@@ -888,8 +886,8 @@ class $$TasksTableTableManager
                 required String name,
                 drift.Value<String> urn = const drift.Value.absent(),
                 required String description,
-                required DateTime commencementDate,
-                required DateTime dueDate,
+                required String commencementDate,
+                required String dueDate,
                 required String assignedTo,
                 required String assignedBy,
                 required String clientName,

@@ -15,8 +15,8 @@ class Tasks extends Table {
   TextColumn get name => text()();
   TextColumn get urn => text().withDefault(Constant(''))();
   TextColumn get description => text()();
-  DateTimeColumn get commencementDate => dateTime()();
-  DateTimeColumn get dueDate => dateTime()();
+  TextColumn get commencementDate => text()();
+  TextColumn get dueDate => text()();
   TextColumn get assignedTo => text()();
   TextColumn get assignedBy => text()();
   TextColumn get clientName => text()();

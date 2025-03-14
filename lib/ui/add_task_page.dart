@@ -1,6 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:drift/drift.dart' hide Column;
+import '../local/database.dart';
+import '../viewModel/task_view_model.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -45,6 +48,25 @@ class _AddTaskPageState extends State<AddTaskPage> {
           _dueDate = picked;
         }
       });
+    }
+  }
+
+  Future<void> _saveTask() async {
+    if (_formKey.currentState!.validate()) {
+      final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+      final task = TasksCompanion(
+        name: Value(_taskNameController.text),
+        urn: Value(_urn.text),
+        description: Value(_descriptionController.text),
+        commencementDate: Value(_commencementDate!.toString()),
+        dueDate: Value(_dueDate!.toString()),
+        assignedTo: Value(_assignedToController.text),
+        assignedBy: Value('Current User'),
+        clientName: Value(_clientNameController.text),
+      );
+      await taskProvider.addTask(task);
+      if(!mounted) return;
+      Navigator.pop(context);
     }
   }
 
@@ -96,7 +118,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               borderRadius: BorderRadius.circular(20),side: BorderSide(color: Colors.green.shade900)),),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              Navigator.pop(context);
+                              _saveTask;
                             }
                           },
                           child: const Text('Save Task', style: TextStyle(color: Colors.white),),

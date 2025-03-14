@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tf1/ui/DashboardPage.dart';
+import 'package:tf1/ui/dashboard_page.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -14,8 +14,8 @@ class _AuthPageState extends State<AuthPage> {
   final _signInFormKey = GlobalKey<FormState>();
   final _signUpFormKey = GlobalKey<FormState>();
 
-  final _emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+\$');
-  final _passwordRegex = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}\$');
+  // final _emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+\$');
+  // final _passwordRegex = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}\$');
 
   void _navigateToDashboard() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => const DashboardPage()),);
@@ -104,7 +104,7 @@ class _AuthPageState extends State<AuthPage> {
                           return 'Please enter your password';
                         }
                         // else if (!_passwordRegex.hasMatch(value)) {
-                        //   return 'Password must be at least 8 characters \ncontain letters and numbers \n and special character';
+                        //   return 'Password must be at least 8 characters \n contain letters and numbers \n and special character';
                         // }
                         return null;
                       },
