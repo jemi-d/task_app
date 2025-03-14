@@ -19,11 +19,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Flutter (Master Channel)
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: "master"  # Use master channel
-          flutter-version: "3.30.0-1.0.pre.603"  # Exact Flutter version
+          channel: 'master'  # Use master channel
+          flutter-version: 'master'  # Exact Flutter version
 
       - name: Install Dependencies
         run: flutter pub get
