@@ -22,3 +22,20 @@ class Task {
     required this.taskType
   });
 }
+
+class UserDetail {
+  String name;
+  String email;
+
+  UserDetail({
+    required this.name,
+    required this.email,
+  });
+
+  factory UserDetail.fromMap(Map<String, String> map) {
+    return UserDetail(
+      email: map['email'] ?? '',
+      name: map['username'] ?? '',
+    );
+  }
+}

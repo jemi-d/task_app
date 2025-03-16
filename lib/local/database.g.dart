@@ -122,7 +122,51 @@ class $TasksTable extends Tasks with drift.TableInfo<$TasksTable, TaskDB> {
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-        defaultValue: drift.Constant('Scheduled'),
+        defaultValue: drift.Constant('1'),
+      );
+  static const drift.VerificationMeta _clientDesignationMeta =
+      const drift.VerificationMeta('clientDesignation');
+  @override
+  late final drift.GeneratedColumn<String> clientDesignation =
+      drift.GeneratedColumn<String>(
+        'client_designation',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const drift.VerificationMeta _clientEmailMeta =
+      const drift.VerificationMeta('clientEmail');
+  @override
+  late final drift.GeneratedColumn<String> clientEmail =
+      drift.GeneratedColumn<String>(
+        'client_email',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const drift.VerificationMeta _currentUserEmailMeta =
+      const drift.VerificationMeta('currentUserEmail');
+  @override
+  late final drift.GeneratedColumn<String> currentUserEmail =
+      drift.GeneratedColumn<String>(
+        'current_user_email',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const drift.VerificationMeta _currentUserMeta =
+      const drift.VerificationMeta('currentUser');
+  @override
+  late final drift.GeneratedColumn<String> currentUser =
+      drift.GeneratedColumn<String>(
+        'current_user',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
       );
   @override
   List<drift.GeneratedColumn> get $columns => [
@@ -136,6 +180,10 @@ class $TasksTable extends Tasks with drift.TableInfo<$TasksTable, TaskDB> {
     assignedBy,
     clientName,
     status,
+    clientDesignation,
+    clientEmail,
+    currentUserEmail,
+    currentUser,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -226,6 +274,50 @@ class $TasksTable extends Tasks with drift.TableInfo<$TasksTable, TaskDB> {
         status.isAcceptableOrUnknown(data['status']!, _statusMeta),
       );
     }
+    if (data.containsKey('client_designation')) {
+      context.handle(
+        _clientDesignationMeta,
+        clientDesignation.isAcceptableOrUnknown(
+          data['client_designation']!,
+          _clientDesignationMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_clientDesignationMeta);
+    }
+    if (data.containsKey('client_email')) {
+      context.handle(
+        _clientEmailMeta,
+        clientEmail.isAcceptableOrUnknown(
+          data['client_email']!,
+          _clientEmailMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_clientEmailMeta);
+    }
+    if (data.containsKey('current_user_email')) {
+      context.handle(
+        _currentUserEmailMeta,
+        currentUserEmail.isAcceptableOrUnknown(
+          data['current_user_email']!,
+          _currentUserEmailMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currentUserEmailMeta);
+    }
+    if (data.containsKey('current_user')) {
+      context.handle(
+        _currentUserMeta,
+        currentUser.isAcceptableOrUnknown(
+          data['current_user']!,
+          _currentUserMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currentUserMeta);
+    }
     return context;
   }
 
@@ -285,6 +377,26 @@ class $TasksTable extends Tasks with drift.TableInfo<$TasksTable, TaskDB> {
             DriftSqlType.string,
             data['${effectivePrefix}status'],
           )!,
+      clientDesignation:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}client_designation'],
+          )!,
+      clientEmail:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}client_email'],
+          )!,
+      currentUserEmail:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}current_user_email'],
+          )!,
+      currentUser:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}current_user'],
+          )!,
     );
   }
 
@@ -305,6 +417,10 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
   final String assignedBy;
   final String clientName;
   final String status;
+  final String clientDesignation;
+  final String clientEmail;
+  final String currentUserEmail;
+  final String currentUser;
   const TaskDB({
     required this.id,
     required this.name,
@@ -316,6 +432,10 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
     required this.assignedBy,
     required this.clientName,
     required this.status,
+    required this.clientDesignation,
+    required this.clientEmail,
+    required this.currentUserEmail,
+    required this.currentUser,
   });
   @override
   Map<String, drift.Expression> toColumns(bool nullToAbsent) {
@@ -330,6 +450,10 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
     map['assigned_by'] = drift.Variable<String>(assignedBy);
     map['client_name'] = drift.Variable<String>(clientName);
     map['status'] = drift.Variable<String>(status);
+    map['client_designation'] = drift.Variable<String>(clientDesignation);
+    map['client_email'] = drift.Variable<String>(clientEmail);
+    map['current_user_email'] = drift.Variable<String>(currentUserEmail);
+    map['current_user'] = drift.Variable<String>(currentUser);
     return map;
   }
 
@@ -345,6 +469,10 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
       assignedBy: drift.Value(assignedBy),
       clientName: drift.Value(clientName),
       status: drift.Value(status),
+      clientDesignation: drift.Value(clientDesignation),
+      clientEmail: drift.Value(clientEmail),
+      currentUserEmail: drift.Value(currentUserEmail),
+      currentUser: drift.Value(currentUser),
     );
   }
 
@@ -364,6 +492,10 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
       assignedBy: serializer.fromJson<String>(json['assignedBy']),
       clientName: serializer.fromJson<String>(json['clientName']),
       status: serializer.fromJson<String>(json['status']),
+      clientDesignation: serializer.fromJson<String>(json['clientDesignation']),
+      clientEmail: serializer.fromJson<String>(json['clientEmail']),
+      currentUserEmail: serializer.fromJson<String>(json['currentUserEmail']),
+      currentUser: serializer.fromJson<String>(json['currentUser']),
     );
   }
   @override
@@ -380,6 +512,10 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
       'assignedBy': serializer.toJson<String>(assignedBy),
       'clientName': serializer.toJson<String>(clientName),
       'status': serializer.toJson<String>(status),
+      'clientDesignation': serializer.toJson<String>(clientDesignation),
+      'clientEmail': serializer.toJson<String>(clientEmail),
+      'currentUserEmail': serializer.toJson<String>(currentUserEmail),
+      'currentUser': serializer.toJson<String>(currentUser),
     };
   }
 
@@ -394,6 +530,10 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
     String? assignedBy,
     String? clientName,
     String? status,
+    String? clientDesignation,
+    String? clientEmail,
+    String? currentUserEmail,
+    String? currentUser,
   }) => TaskDB(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -405,6 +545,10 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
     assignedBy: assignedBy ?? this.assignedBy,
     clientName: clientName ?? this.clientName,
     status: status ?? this.status,
+    clientDesignation: clientDesignation ?? this.clientDesignation,
+    clientEmail: clientEmail ?? this.clientEmail,
+    currentUserEmail: currentUserEmail ?? this.currentUserEmail,
+    currentUser: currentUser ?? this.currentUser,
   );
   TaskDB copyWithCompanion(TasksCompanion data) {
     return TaskDB(
@@ -425,6 +569,18 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
       clientName:
           data.clientName.present ? data.clientName.value : this.clientName,
       status: data.status.present ? data.status.value : this.status,
+      clientDesignation:
+          data.clientDesignation.present
+              ? data.clientDesignation.value
+              : this.clientDesignation,
+      clientEmail:
+          data.clientEmail.present ? data.clientEmail.value : this.clientEmail,
+      currentUserEmail:
+          data.currentUserEmail.present
+              ? data.currentUserEmail.value
+              : this.currentUserEmail,
+      currentUser:
+          data.currentUser.present ? data.currentUser.value : this.currentUser,
     );
   }
 
@@ -440,7 +596,11 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
           ..write('assignedTo: $assignedTo, ')
           ..write('assignedBy: $assignedBy, ')
           ..write('clientName: $clientName, ')
-          ..write('status: $status')
+          ..write('status: $status, ')
+          ..write('clientDesignation: $clientDesignation, ')
+          ..write('clientEmail: $clientEmail, ')
+          ..write('currentUserEmail: $currentUserEmail, ')
+          ..write('currentUser: $currentUser')
           ..write(')'))
         .toString();
   }
@@ -457,6 +617,10 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
     assignedBy,
     clientName,
     status,
+    clientDesignation,
+    clientEmail,
+    currentUserEmail,
+    currentUser,
   );
   @override
   bool operator ==(Object other) =>
@@ -471,7 +635,11 @@ class TaskDB extends drift.DataClass implements drift.Insertable<TaskDB> {
           other.assignedTo == this.assignedTo &&
           other.assignedBy == this.assignedBy &&
           other.clientName == this.clientName &&
-          other.status == this.status);
+          other.status == this.status &&
+          other.clientDesignation == this.clientDesignation &&
+          other.clientEmail == this.clientEmail &&
+          other.currentUserEmail == this.currentUserEmail &&
+          other.currentUser == this.currentUser);
 }
 
 class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
@@ -485,6 +653,10 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
   final drift.Value<String> assignedBy;
   final drift.Value<String> clientName;
   final drift.Value<String> status;
+  final drift.Value<String> clientDesignation;
+  final drift.Value<String> clientEmail;
+  final drift.Value<String> currentUserEmail;
+  final drift.Value<String> currentUser;
   const TasksCompanion({
     this.id = const drift.Value.absent(),
     this.name = const drift.Value.absent(),
@@ -496,6 +668,10 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
     this.assignedBy = const drift.Value.absent(),
     this.clientName = const drift.Value.absent(),
     this.status = const drift.Value.absent(),
+    this.clientDesignation = const drift.Value.absent(),
+    this.clientEmail = const drift.Value.absent(),
+    this.currentUserEmail = const drift.Value.absent(),
+    this.currentUser = const drift.Value.absent(),
   });
   TasksCompanion.insert({
     this.id = const drift.Value.absent(),
@@ -508,13 +684,21 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
     required String assignedBy,
     required String clientName,
     this.status = const drift.Value.absent(),
+    required String clientDesignation,
+    required String clientEmail,
+    required String currentUserEmail,
+    required String currentUser,
   }) : name = drift.Value(name),
        description = drift.Value(description),
        commencementDate = drift.Value(commencementDate),
        dueDate = drift.Value(dueDate),
        assignedTo = drift.Value(assignedTo),
        assignedBy = drift.Value(assignedBy),
-       clientName = drift.Value(clientName);
+       clientName = drift.Value(clientName),
+       clientDesignation = drift.Value(clientDesignation),
+       clientEmail = drift.Value(clientEmail),
+       currentUserEmail = drift.Value(currentUserEmail),
+       currentUser = drift.Value(currentUser);
   static drift.Insertable<TaskDB> custom({
     drift.Expression<int>? id,
     drift.Expression<String>? name,
@@ -526,6 +710,10 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
     drift.Expression<String>? assignedBy,
     drift.Expression<String>? clientName,
     drift.Expression<String>? status,
+    drift.Expression<String>? clientDesignation,
+    drift.Expression<String>? clientEmail,
+    drift.Expression<String>? currentUserEmail,
+    drift.Expression<String>? currentUser,
   }) {
     return drift.RawValuesInsertable({
       if (id != null) 'id': id,
@@ -538,6 +726,10 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
       if (assignedBy != null) 'assigned_by': assignedBy,
       if (clientName != null) 'client_name': clientName,
       if (status != null) 'status': status,
+      if (clientDesignation != null) 'client_designation': clientDesignation,
+      if (clientEmail != null) 'client_email': clientEmail,
+      if (currentUserEmail != null) 'current_user_email': currentUserEmail,
+      if (currentUser != null) 'current_user': currentUser,
     });
   }
 
@@ -552,6 +744,10 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
     drift.Value<String>? assignedBy,
     drift.Value<String>? clientName,
     drift.Value<String>? status,
+    drift.Value<String>? clientDesignation,
+    drift.Value<String>? clientEmail,
+    drift.Value<String>? currentUserEmail,
+    drift.Value<String>? currentUser,
   }) {
     return TasksCompanion(
       id: id ?? this.id,
@@ -564,6 +760,10 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
       assignedBy: assignedBy ?? this.assignedBy,
       clientName: clientName ?? this.clientName,
       status: status ?? this.status,
+      clientDesignation: clientDesignation ?? this.clientDesignation,
+      clientEmail: clientEmail ?? this.clientEmail,
+      currentUserEmail: currentUserEmail ?? this.currentUserEmail,
+      currentUser: currentUser ?? this.currentUser,
     );
   }
 
@@ -600,6 +800,22 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
     if (status.present) {
       map['status'] = drift.Variable<String>(status.value);
     }
+    if (clientDesignation.present) {
+      map['client_designation'] = drift.Variable<String>(
+        clientDesignation.value,
+      );
+    }
+    if (clientEmail.present) {
+      map['client_email'] = drift.Variable<String>(clientEmail.value);
+    }
+    if (currentUserEmail.present) {
+      map['current_user_email'] = drift.Variable<String>(
+        currentUserEmail.value,
+      );
+    }
+    if (currentUser.present) {
+      map['current_user'] = drift.Variable<String>(currentUser.value);
+    }
     return map;
   }
 
@@ -615,7 +831,11 @@ class TasksCompanion extends drift.UpdateCompanion<TaskDB> {
           ..write('assignedTo: $assignedTo, ')
           ..write('assignedBy: $assignedBy, ')
           ..write('clientName: $clientName, ')
-          ..write('status: $status')
+          ..write('status: $status, ')
+          ..write('clientDesignation: $clientDesignation, ')
+          ..write('clientEmail: $clientEmail, ')
+          ..write('currentUserEmail: $currentUserEmail, ')
+          ..write('currentUser: $currentUser')
           ..write(')'))
         .toString();
   }
@@ -644,6 +864,10 @@ typedef $$TasksTableCreateCompanionBuilder =
       required String assignedBy,
       required String clientName,
       drift.Value<String> status,
+      required String clientDesignation,
+      required String clientEmail,
+      required String currentUserEmail,
+      required String currentUser,
     });
 typedef $$TasksTableUpdateCompanionBuilder =
     TasksCompanion Function({
@@ -657,6 +881,10 @@ typedef $$TasksTableUpdateCompanionBuilder =
       drift.Value<String> assignedBy,
       drift.Value<String> clientName,
       drift.Value<String> status,
+      drift.Value<String> clientDesignation,
+      drift.Value<String> clientEmail,
+      drift.Value<String> currentUserEmail,
+      drift.Value<String> currentUser,
     });
 
 class $$TasksTableFilterComposer
@@ -715,6 +943,26 @@ class $$TasksTableFilterComposer
 
   drift.ColumnFilters<String> get status => $composableBuilder(
     column: $table.status,
+    builder: (column) => drift.ColumnFilters(column),
+  );
+
+  drift.ColumnFilters<String> get clientDesignation => $composableBuilder(
+    column: $table.clientDesignation,
+    builder: (column) => drift.ColumnFilters(column),
+  );
+
+  drift.ColumnFilters<String> get clientEmail => $composableBuilder(
+    column: $table.clientEmail,
+    builder: (column) => drift.ColumnFilters(column),
+  );
+
+  drift.ColumnFilters<String> get currentUserEmail => $composableBuilder(
+    column: $table.currentUserEmail,
+    builder: (column) => drift.ColumnFilters(column),
+  );
+
+  drift.ColumnFilters<String> get currentUser => $composableBuilder(
+    column: $table.currentUser,
     builder: (column) => drift.ColumnFilters(column),
   );
 }
@@ -777,6 +1025,26 @@ class $$TasksTableOrderingComposer
     column: $table.status,
     builder: (column) => drift.ColumnOrderings(column),
   );
+
+  drift.ColumnOrderings<String> get clientDesignation => $composableBuilder(
+    column: $table.clientDesignation,
+    builder: (column) => drift.ColumnOrderings(column),
+  );
+
+  drift.ColumnOrderings<String> get clientEmail => $composableBuilder(
+    column: $table.clientEmail,
+    builder: (column) => drift.ColumnOrderings(column),
+  );
+
+  drift.ColumnOrderings<String> get currentUserEmail => $composableBuilder(
+    column: $table.currentUserEmail,
+    builder: (column) => drift.ColumnOrderings(column),
+  );
+
+  drift.ColumnOrderings<String> get currentUser => $composableBuilder(
+    column: $table.currentUser,
+    builder: (column) => drift.ColumnOrderings(column),
+  );
 }
 
 class $$TasksTableAnnotationComposer
@@ -827,6 +1095,26 @@ class $$TasksTableAnnotationComposer
 
   drift.GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
+
+  drift.GeneratedColumn<String> get clientDesignation => $composableBuilder(
+    column: $table.clientDesignation,
+    builder: (column) => column,
+  );
+
+  drift.GeneratedColumn<String> get clientEmail => $composableBuilder(
+    column: $table.clientEmail,
+    builder: (column) => column,
+  );
+
+  drift.GeneratedColumn<String> get currentUserEmail => $composableBuilder(
+    column: $table.currentUserEmail,
+    builder: (column) => column,
+  );
+
+  drift.GeneratedColumn<String> get currentUser => $composableBuilder(
+    column: $table.currentUser,
+    builder: (column) => column,
+  );
 }
 
 class $$TasksTableTableManager
@@ -868,6 +1156,12 @@ class $$TasksTableTableManager
                 drift.Value<String> assignedBy = const drift.Value.absent(),
                 drift.Value<String> clientName = const drift.Value.absent(),
                 drift.Value<String> status = const drift.Value.absent(),
+                drift.Value<String> clientDesignation =
+                    const drift.Value.absent(),
+                drift.Value<String> clientEmail = const drift.Value.absent(),
+                drift.Value<String> currentUserEmail =
+                    const drift.Value.absent(),
+                drift.Value<String> currentUser = const drift.Value.absent(),
               }) => TasksCompanion(
                 id: id,
                 name: name,
@@ -879,6 +1173,10 @@ class $$TasksTableTableManager
                 assignedBy: assignedBy,
                 clientName: clientName,
                 status: status,
+                clientDesignation: clientDesignation,
+                clientEmail: clientEmail,
+                currentUserEmail: currentUserEmail,
+                currentUser: currentUser,
               ),
           createCompanionCallback:
               ({
@@ -892,6 +1190,10 @@ class $$TasksTableTableManager
                 required String assignedBy,
                 required String clientName,
                 drift.Value<String> status = const drift.Value.absent(),
+                required String clientDesignation,
+                required String clientEmail,
+                required String currentUserEmail,
+                required String currentUser,
               }) => TasksCompanion.insert(
                 id: id,
                 name: name,
@@ -903,6 +1205,10 @@ class $$TasksTableTableManager
                 assignedBy: assignedBy,
                 clientName: clientName,
                 status: status,
+                clientDesignation: clientDesignation,
+                clientEmail: clientEmail,
+                currentUserEmail: currentUserEmail,
+                currentUser: currentUser,
               ),
           withReferenceMapper:
               (p0) =>

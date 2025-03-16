@@ -8,7 +8,6 @@ import 'dart:io';
 
 part 'database.g.dart';
 
-
 @DataClassName('TaskDB')
 class Tasks extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -20,7 +19,11 @@ class Tasks extends Table {
   TextColumn get assignedTo => text()();
   TextColumn get assignedBy => text()();
   TextColumn get clientName => text()();
-  TextColumn get status => text().withDefault(Constant('Scheduled'))();
+  TextColumn get status => text().withDefault(Constant('1'))();
+  TextColumn get clientDesignation => text()();
+  TextColumn get clientEmail => text()();
+  TextColumn get currentUserEmail => text()();
+  TextColumn get currentUser => text()();
 }
 
 @DriftDatabase(tables: [Tasks])
@@ -38,26 +41,31 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
-  Future<int> insertTask(TasksCompanion task) => into(tasks).insert(task);
-
   Future<List<TaskDB>> getAllTasks() => select(tasks).get();
 
-  Future<bool> updateTask(TaskDB task) => update(tasks).replace(task);
+  Future<void> insertTask(TasksCompanion task) async {
+    await into(tasks).insert(task);
+  }
 
-  Future<int> deleteTask(int id) => (delete(tasks)..where((t) => t.id.equals(id))).go();
+  Future<void> updateTask(TaskDB task) async {
+    await update(tasks).replace(task);
+  }
+
+  Future<void> deleteTask(int id) async {
+    await (delete(tasks)..where((t) => t.id.equals(id))).go();
+  }
+
+  Future<int> updateStatus(int id, String value) {
+    return (update(tasks)..where((t) => t.id.equals(id)))
+        .write(TasksCompanion(status: Value(value)));   // Update status to '0'
+  }
+  Future<List<TaskDB>> getActiveTasks() => (select(tasks)..where((t) => t.status.equals('1'))).get();
+
+  // Future<List<TaskDB>> getAllDeletedTasks() => (select(tasks)..where((t) => t.status.equals('0'))).get();
+  // Future<List<TaskDB>> getAllCompletedTasks() => (select(tasks)..where((t) => t.status.equals('2'))).get();
+
 }
 
-// QueryExecutor _openConnection() {
-//   if (kIsWeb) {
-//     return WebDatabase('app_database');
-//   } else {
-//     return LazyDatabase(() async {
-//       final dbFolder = await getApplicationDocumentsDirectory();
-//       final file = File(p.join(dbFolder.path, 'app.db'));
-//       return native.NativeDatabase.createInBackground(file);
-//     });
-//   }
-// }
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();

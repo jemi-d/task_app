@@ -1,8 +1,12 @@
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tf1/common/common_ui.dart';
+import 'package:tf1/local/database.dart';
+import 'package:tf1/viewModel/task_view_model.dart';
 
 class TaskCommencementPage extends StatefulWidget {
-  const TaskCommencementPage({super.key});
+  final TaskDB taskDB;
+  const TaskCommencementPage({super.key, required this.taskDB});
 
   @override
    TaskCommencementPageState createState() => TaskCommencementPageState();
@@ -13,6 +17,7 @@ class TaskCommencementPageState extends State<TaskCommencementPage> {
   final TextEditingController _areaNameController = TextEditingController();
   final TextEditingController _schoolCountController = TextEditingController();
   final TextEditingController _establishedDateController = TextEditingController();
+  bool isSidebarOpen = true;
   String? schoolType;
   List<String> selectedCurriculum = [];
   List<String> selectedGrades = [];
@@ -29,16 +34,26 @@ class TaskCommencementPageState extends State<TaskCommencementPage> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<TaskProvider>(context,listen: false);
     return Scaffold(
-      appBar: AppBar(title: const Text('Task Commencement',style: TextStyle(color: Colors.white),),foregroundColor: Colors.white,
-        backgroundColor: Colors.green.shade900,),
-      body: Row(
+      body: Column(
         children: [
-          _buildSidebar(),
+          TopBarUI(isSidebarOpen: isSidebarOpen,onValueChanged: (value){
+            setState(() {
+              isSidebarOpen = value;
+            });
+          },isAddTask: false,heading: 'Task Commencement',),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _buildContent(),
+            child: Row(
+              children: [
+                Expanded(flex: 0,child: _buildSidebar()),
+                Expanded(flex: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: _buildContent(provider),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -47,34 +62,36 @@ class TaskCommencementPageState extends State<TaskCommencementPage> {
   }
 
   Widget _buildSidebar() {
-    return Container(
-      width: 200,
+    return  AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: isSidebarOpen ? 200 : 0,
       color: Colors.green.shade100,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListTile(
-            title: const Text('General Data'),
-            onTap: () => setState(() => selectedTab = 'General Data'),
-          ),
-          ...schoolNames.map((name) => ListTile(
-            title: Text(name),
-            onTap: () => setState(() => selectedTab = name),
-          )),
+          if(isSidebarOpen)...[
+            ListTile(
+              title: const Text('General Data'),
+              onTap: () => setState(() => selectedTab = 'General Data'),
+            ),
+            ...schoolNames.map((name) => ListTile(
+              title: Text(name),
+              onTap: () => setState(() => selectedTab = name),
+            )),
+          ]
         ],
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(TaskProvider provider) {
     if (selectedTab == 'General Data') {
       return Form(
         key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildTextField(_areaNameController, 'Name of the Area', true),
-            _buildTextField(_schoolCountController, 'Total No. of Schools (Max 5)', true,
+            _buildTextField(_areaNameController,false, 'Name of the Area', true),
+            _buildTextField(_schoolCountController, true,'Total No. of Schools (Max 5)', true,
                 onChanged: (value) => generateSchoolButtons()),
           ],
         ),
@@ -82,33 +99,39 @@ class TaskCommencementPageState extends State<TaskCommencementPage> {
     } else {
       return Form(
         key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Overview - $selectedTab', style: Theme.of(context).textTheme.titleLarge),
-            _buildDropdown('Type of School', ['Public', 'Private', 'Govt Aided', 'Special'], (value) {
-              setState(() {
-                schoolType = value;
-              });
-            }),
-            _buildMultiSelect('Curriculum', ['CBSE', 'ICSE', 'IB', 'State Board'], selectedCurriculum),
-            _buildTextField(_establishedDateController, 'Established On', true),
-            _buildMultiSelect('Grades Present', ['Primary', 'Secondary', 'Higher Secondary'], selectedGrades),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Finish'),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(mainAxisSize: MainAxisSize.min,crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Overview - $selectedTab', style: Theme.of(context).textTheme.titleLarge),
+              _buildDropdown('Type of School', ['Public', 'Private', 'Govt Aided', 'Special'], (value) {
+                setState(() {
+                  schoolType = value;
+                });
+              }),
+              _buildMultiSelect('Curriculum', ['CBSE', 'ICSE', 'IB', 'State Board'], selectedCurriculum),
+              _buildTextField(_establishedDateController, false,'Established On', true),
+              _buildMultiSelect('Grades Present', ['Primary', 'Secondary', 'Higher Secondary'], selectedGrades),
+              const SizedBox(height: 20),
+              SizedBox(width: 180,height: 40,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade900,shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),side: BorderSide(color: Colors.green.shade900)),),
+                  onPressed: () async {
+                    await provider.updateStatus(widget.taskDB.id,'2');
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Finish', style: TextStyle(color: Colors.white),),
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
   }
 
   Widget _buildDropdown(String label, List<String> options, Function(String?) onChanged) {
-    return Padding(
+    return Container(width: 250,
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
@@ -152,10 +175,11 @@ class TaskCommencementPageState extends State<TaskCommencementPage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label, bool isRequired, {Function(String)? onChanged}) {
-    return Padding(
+  Widget _buildTextField(TextEditingController controller,bool isNum, String label, bool isRequired, {Function(String)? onChanged}) {
+    return Container(width: 250,
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
+        keyboardType: isNum ? TextInputType.number : TextInputType.text,
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
