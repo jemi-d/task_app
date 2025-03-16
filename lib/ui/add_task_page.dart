@@ -67,7 +67,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     String? storedEmail = await storage.read(key: 'email');
     String? storedUser = await storage.read(key: 'username');
     if(_formKey.currentState!.validate()){
-      if(!mounted) return;
+      // if(!mounted) return;
       final taskProvider = Provider.of<TaskProvider>(context, listen: false);
 
       final task = TasksCompanion(
@@ -108,8 +108,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
       } else {
         await taskProvider.addTask(task);
       }
-      if(!mounted) return;
-      Navigator.pop(context);
+      Future.delayed(Duration(milliseconds: 100), () {
+        if (mounted) Navigator.pop(context);
+      });
     }else{
       if(!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid data')));

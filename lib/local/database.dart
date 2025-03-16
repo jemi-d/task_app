@@ -69,7 +69,7 @@ class AppDatabase extends _$AppDatabase {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'db.sqlite'));
-    return native.NativeDatabase(file);
+    final file = File(p.join(dbFolder.path, 'db.sqlite1'));
+    return LazyDatabase(() async => native.NativeDatabase(file,logStatements: true));
   });
 }
